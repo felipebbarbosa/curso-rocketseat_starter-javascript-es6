@@ -1,20 +1,27 @@
-## Curso Javascript ES6+
+## Curso Starter JavaScript ES6+
 
-### Anotações
+### Anotações do curso
 
-### 0. Conceitos
+### Conceitos e Definições
 
 - yarn = Gerenciador de pacotes do JavaScript;
 - babel = Traduz o código JavaScript ES6+ para que todos os navegadores entendam;
 
-#### Configurando o Babel
+### Babel
+
+#### Configurando
 
 ***ATENÇÃO: Tem que instalar o Node.js e o Yarn antes!***
 
-Na pasta do projeto via prompt de comando:
+Após a criação da pasta do projeto e executado o comando:
 
 ```
 yarn init
+```
+
+É necessário instalar as dependências do Babel no projeto:
+
+```
 yarn add @babel/cli
 yarn add @babel/preset-env
 yarn add @babel/core
@@ -27,11 +34,17 @@ Crie um arquivo .babelrc com o seguinte conteúdo:
 }
 ```
 
-#### Operações em Array e Arrow Functions
+O `preset-env` é o responsável por identificar o ambiente na qual está trabalhando para converter as funcionalidades escritas em ES6 no código que aquele ambiente entenda, por exemplo, o navegador.
+
+***Observação: Adicione a pasta `node_modules` no arquivo `.gitignore`.***
+
+### Operações em Array e Arrow Functions
 
 ```const arr = [1, 2, 4, 5];```
 
 ##### Map
+
+O método é utilizado para quando você quiser manipular os dados de um array, gerando um novo array. Por exemplo, dado o array acima, vamos supor que você queira dobrar o valor de cada elemento do vetor. Você fazer desta forma:
 
 Via function tradicional:
 ```
@@ -47,7 +60,7 @@ const newArr = arr.map(item => item * 2);
 
 #### Reduce
 
-Percorre todo o array e retorna apenas um valor.
+Já esse método percorre todo o array e retorna apenas um valor. Vamos supor que queira somar todos os elementos do array:
 
 Via function tradicional:
 ```
@@ -91,9 +104,9 @@ Via arrow function:
 const resultado = arr.find(item => item === 4);
 ```
 
-Nota: arrow functions é mais recomendado para funçoes anônimas (como dos exemplos acima);
+Nota: arrow functions é mais recomendado para funções anônimas (como dos exemplos acima);
 
-#### Valores padrão
+### Valores padrão
 
 É possível passar valores padrão para as funções da seguinte forma:
 
@@ -109,7 +122,7 @@ console.log(soma(1)); // 1
 console.log(soma()); // 0
 ```
 
-#### Desestruturação
+### Desestruturação
 
 ```
 const usuario = {
@@ -137,8 +150,9 @@ console.log(nome);
 console.log(estado);
 ```
 
-É possível usar com parâmetro de função:
+É possível usar como parâmetro de função:
 
+Maneira tradicional:
 ```
 function mostraNome(usuario) {
     return console.log(usuario.nome);
@@ -157,7 +171,7 @@ function mostraNome({ nome }) {
 mostraNome(usuario);
 ```
 
-#### Operadores Rest/Spread
+### Operadores Rest/Spread
 
 ***ATENÇÃO: É necessário instalar um plugin para o Babel***
 
@@ -179,8 +193,8 @@ const usuario = {
 };
 
 const { nome, ...restante } = usuario;
-console.log(nome);
-console.log(restante);
+console.log(nome);      \\ Felipe
+console.log(restante);  \\ { idade: 31, empresa: 'Google' }
 ```
 
 Outro exemplo:
@@ -194,7 +208,7 @@ const [a, b, ...c] = arr;
 
 #### Spread
 
-É o mesmo operador, só usado de forma diferente. No exemplo abaixo, o usuario2 irá todas informações do usuario1 com exceção do nome, que será alterado:
+É o mesmo operador, só usado de forma diferente. No exemplo abaixo, o `usuario2` irá pegar todas informações do `usuario1` com exceção do `nome`, que será alterado:
 
 ```
 const usuario1 = {
@@ -204,15 +218,20 @@ const usuario1 = {
 };
 
 const usuario2 = { ...usuario1, nome: 'Camila' };
+
+console.log(usuario2); \\ { nome: 'Camila', idade: 31, empresa: 'Google' }
+
 ```
 
 ```
 const arr1 = [1, 2, 3];
 const arr2 = [4, 5, 6];
 const arr3 = [...arr1, ...arr2];
+
+console.log(arr3); \\ [1, 2, 3, 4, 5, 6]
 ```
 
-#### Template literals
+### Template literals
 
 Uma forma de incluir variáveis dentro de uma string do ES6+:
 
@@ -226,7 +245,9 @@ console.log(`Meu nome é ${nome} e tenho ${idade} anos`);
 Obs.: Só um detalhe que não é aspas simples (') na chamada do console.log e sim crase (`);
 
 
-#### Object short syntax
+### Object short syntax
+
+Quando o nome de variável tem o mesmo nome do atributo do objeto, você não precisa colocar, exemplo:
 
 ```
 const nome = 'Felipe';
@@ -238,6 +259,57 @@ const usuario = {
     empresa: 'Google'
 };
 ```
+
+### Webpack 
+
+Webpack é como se fosse um serviço que possibilita a gente trabalhar com vários arquivos .js (e .css e imagens) na nossa aplicação, através do *export/import*. Para instalar: 
+
+```
+yarn add webpack webpack-cli -D
+yarn add babel-loader -D
+yarn add webpack-dev-server -D
+```
+***Obs: o `-D` significa que é uma dependência de desenvolvimento assim como o Babel.***
+
+Crie o arquivo `webpack.config.js` e altere o script `dev` do arquivo `package.json`.
+
+### Async/Await
+
+A partir do ES8, é possível escrever promises (requisições assíncronas) de outra maneira. Por exemplo:
+
+Antes, usando promises:
+```
+function getUserFromGithub(user) {
+    axios.get(`https://api.github.com/users/${user}`)
+        .then(response => {
+            console.log(response.data);
+        })
+        .catch(err => {
+            console.log('Usuário não existe');
+        })
+}
+```
+Depois, com async/await:
+```
+async function getUserFromGithub(user) {
+    try {
+        const response = await axios.get(`https://api.github.com/users/${user}`);
+        console.log(response.data);
+    } catch (err) {
+        console.log('Usuário não existe');
+    }
+}
+```
+
+Lembrando que toda `function` quando colocada o `async` na frente, ela se torna uma promise, então você pode usar com a sintaxe antiga também. Além disso, você só pode usar o `await` dentro de uma `async function`.
+
+### AXIOS
+
+```
+yarn add axios
+```
+
+
 
 
 
